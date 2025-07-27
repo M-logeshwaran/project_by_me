@@ -76,22 +76,25 @@ dbms_cli_project/
 ├── sample_export.csv      # Example CSV output
 └── requirements.txt       # Optional dependencies
 
-⚙️ Usage Examples
-Create & switch databases: Navigate menu option 0 → create to add a new database automatically switched to.
+⚙️ Usage Examples :
 
-Export tables: Use option 9 to save table data as a .csv file.
+* Create & switch databases: Navigate menu option 0 → create to add a new database automatically switched to.
 
-Drop operations: Option 11 allows dropping a selected table or an entire database.
+* Export tables: Use option 9 to save table data as a .csv file.
+
+* Drop operations: Option 11 allows dropping a selected table or an entire database.
 
 📋 Contributing
-Contributions are welcome! Please open an issue or submit a pull request. For significant changes, discuss via an issue first.
+
+* Contributions are welcome! Please open an issue or submit a pull request. For significant changes, discuss via an issue first.
 
 ❓ Trouble & FAQ
-MySQL errors or permission issues: Verify your user credentials and database permissions.
 
-Crash or unexpected termination: Ensure your syntax when entering SQL operations is correct and escape commas/quotes properly.
+* MySQL errors or permission issues: Verify your user credentials and database permissions.
 
-Missing database or table: Use the database or table menu options to check names and existence.
+* Crash or unexpected termination: Ensure your syntax when entering SQL operations is correct and escape commas/quotes properly.
+
+* Missing database or table: Use the database or table menu options to check names and existence.
 
 📜 License
 This project is provided for learning and academic purposes. No commercial rights are granted.
