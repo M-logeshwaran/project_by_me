@@ -1,4 +1,47 @@
 import random as r
+
+def h_1st():
+    scoreh,scorer=0,0
+    print("\n---------------------------------------------------------------------------------------")
+    print('\n\t\t >>> YOU WON THE TOSS :')
+    h_ebc=input('\n\t\t* Enter your choice [ BAT OR BOWL ] : ')
+    if(h_ebc=='BAT'):
+        scoreh=h_bat(scorer,'min')
+        print('\n\t\t >>> YOUR SCORE :',scoreh)
+        print('\n\t\t >>> MY TARGET :',scoreh+1)
+        scorer=h_bowl(scoreh,'max')
+        print('\n\t\t >>> MY SCORE :',scorer)
+        return scoreh,scorer
+    elif(h_ebc=='BOWL'):
+        scorer=h_bowl(scoreh,'min')
+        print('\n\t\t >>> MY SCORE :',scorer)
+        print('\n\t\t >>> YOUR TARGET :',scorer+1)
+        scoreh=h_bat(scorer,'max')
+        print('\n\t\t >>> YOUR SCORE :',scoreh)
+        return scoreh,scorer
+
+def r_1st():
+    scoreh,scorer=0,0
+    r_bb=r.randint(2,3)
+    print("\n---------------------------------------------------------------------------------------")
+    print('\n\t\t >>> I WON THE TOSS :')
+    print('\n\t\t* MY choice [ BAT OR BOWL ] : ',l[r_bb])
+    if(l[r_bb]=='BOWL'):
+        scoreh=h_bat(scorer,'min')
+        print('\n\t\t >>> YOUR SCORE :',scoreh)
+        print('\n\t\t >>> MY TARGET :',scoreh+1)
+        scorer=h_bowl(scoreh,'max')
+        print('\n\t\t >>> MY SCORE :',scorer)
+        return scoreh,scorer
+    elif(l[r_bb]=='BAT'):
+        scorer=h_bowl(scoreh,'min')
+        print('\n\t\t >>> MY SCORE :',scorer)
+        print('\n\t\t >>> YOUR TARGET :',scorer+1)
+        scoreh=h_bat(scorer,'max')
+        print('\n\t\t >>> YOUR SCORE :',scoreh)
+        return scoreh,scorer
+
+                    
 def h_bat(scorer,s):
     score=0
     while(True):
@@ -52,80 +95,21 @@ while (a=='YES'):
     
         if(check%2==0):
             if(h_c=='EVEN'):
-                print("\n---------------------------------------------------------------------------------------")
-                print('\n\t\t >>> YOU WON THE TOSS :')
-                h_ebc=input('\n\t\t* Enter your choice [ BAT OR BOWL ] : ')
-                if(h_ebc=='BAT'):
-                    scoreh=h_bat(scorer,'min')
-                    print('\n\t\t >>> YOUR SCORE :',scoreh)
-                    print('\n\t\t >>> MY TARGET :',scoreh+1)
-                    scorer=h_bowl(scoreh,'max')
-                    print('\n\t\t >>> MY SCORE :',scorer)
-                elif(h_ebc=='BOWL'):
-                    scorer=h_bowl(scoreh,'min')
-                    print('\n\t\t >>> MY SCORE :',scorer)
-                    print('\n\t\t >>> YOUR TARGET :',scorer+1)
-                    scoreh=h_bat(scorer,'max')
-                    print('\n\t\t >>> YOUR SCORE :',scoreh)
+                scoreh,scorer=h_1st()
                 
             
             elif(l[r_eo]=='EVEN'):
-                r_bb=r.randint(2,3)
-                print("\n---------------------------------------------------------------------------------------")
-                print('\n\t\t >>> I WON THE TOSS :')
-                print('\n\t\t* MY choice [ BAT OR BOWL ] : ',l[r_bb])
-                if(l[r_bb]=='BOWL'):
-                    scoreh=h_bat(scorer,'min')
-                    print('\n\t\t >>> YOUR SCORE :',scoreh)
-                    print('\n\t\t >>> MY TARGET :',scoreh+1)
-                    scorer=h_bowl(scoreh,'max')
-                    print('\n\t\t >>> MY SCORE :',scorer)
-
-                elif(l[r_bb]=='BAT'):
-                    scorer=h_bowl(scoreh,'min')
-                    print('\n\t\t >>> MY SCORE :',scorer)
-                    print('\n\t\t >>> YOUR TARGET :',scorer+1)
-                    scoreh=h_bat(scorer,'max')
-                    print('\n\t\t >>> YOUR SCORE :',scoreh)
+                scoreh,scorer=r_1st()
 
 
         elif(check%2!=0):
             if(h_c=='ODD'):
-                print("\n---------------------------------------------------------------------------------------")
-                print('\n\t\t >>> YOU WON THE TOSS :')
-                h_obc=input('\n\t\t* Enter your choice [ BAT OR BOWL ] : ')
-                if(h_obc=='BAT'):
-                    scoreh=h_bat(scorer,'min')
-                    print('\n\t\t >>> YOUR SCORE :',scoreh)
-                    print('\n\t\t >>> MY TARGET :',scoreh+1)
-                    scorer=h_bowl(scoreh,'max')
-                    print('\n\t\t >>> MY SCORE :',scorer)
-
-                elif(h_obc=='BOWL'):
-                    scorer=h_bowl(scoreh,'min')
-                    print('\n\t\t >>> MY SCORE :',scorer)
-                    print('\n\t\t >>> YOUR TARGET :',scorer+1)
-                    scoreh=h_bat(scorer,'max')
-                    print('\n\t\t >>> YOUR SCORE :',scoreh)
+                scoreh,scorer=h_1st()
 
             elif(l[r_eo]=='ODD'):
-                r_bb=r.randint(2,3)
-                print("\n---------------------------------------------------------------------------------------")
-                print('\n\t\t >>> I WON THE TOSS :')
-                print('\n\t\t* MY choice [ BAT OR BOWL ] : ',l[r_bb])
-                if(l[r_bb]=='BOWL'):
-                    scoreh=h_bat(scorer,'min')
-                    print('\n\t\t >>> YOUR SCORE :',scoreh)
-                    print('\n\t\t >>> MY TARGET :',scoreh+1)
-                    scorer=h_bowl(scoreh,'max')
-                    print('\n\t\t >>> MY SCORE :',scorer)
+                scoreh,scorer=r_1st()
 
-                elif(l[r_bb]=='BAT'):
-                    scorer=h_bowl(scoreh,'min')
-                    print('\n\t\t >>> MY SCORE :',scorer)
-                    print('\n\t\t >>> YOUR TARGET :',scorer+1)
-                    scoreh=h_bat(scorer,'max')
-                    print('\n\t\t >>> YOUR SCORE :',scoreh)
+                    
         print("\n---------------------------------------------------------------------------------------")            
         if(scorer>scoreh):
             print('\n\t\t >>> I WON THE GAME !\n')
