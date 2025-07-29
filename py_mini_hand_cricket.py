@@ -31,6 +31,12 @@ def h_1st():
         print('\n\t\t >>> YOUR TOTAL SCORE :',scoreh)
         print('\n\t\t >>> COMP TOTAL SCORE :',scorer)
         return scoreh,scorer
+    else:
+        print("\n\t\t -----> ERROR ! CHOOSE BETWEEN [BAT or BOWL] !")  
+        print("\n---------------------------------------------------------------------------------------")
+        scoreh,scorer=h_1st()
+        return scoreh,scorer
+          
 
 def r_1st():
     scoreh,scorer=0,0
@@ -65,7 +71,7 @@ def r_1st():
         print('\n\t\t >>> COMP TOTAL SCORE :',scorer)
         return scoreh,scorer
 
-                    
+
 def h_bat(scorer,s):
     score=0
     balls=0
@@ -86,7 +92,7 @@ def h_bat(scorer,s):
             elif(score==100):
                 print("\n\t\t YOU REACH CENTURY !")
             print('\n\t\t >>> YOUR CURRENT SCORE :',score)
-            print('\n\t\t >>> BALLS :',balls)
+            print('\n\t\t >>> BALLS COUNT :',balls)
         if(r_bowl==h_bat or (score<scorer and s=='min') or (score>scorer and s=='max')):
             return score
             break
@@ -111,7 +117,7 @@ def h_bowl(scoreh,s):
             elif(score==100):
                 print("\n\t\t COMP REACH CENTURY !")
             print('\n\t\t >>> COMP CURRENT SCORE :',score)
-            print('\n\t\t >>> BALLS :',balls)
+            print('\n\t\t >>> BALLS COUNT :',balls)
         if(r_bat==h_bowl or (score>scoreh and s=='max') or (score<scoreh and s=='min')):
             return score
             break
@@ -124,6 +130,10 @@ while(True):
     if(a=="YES"):
         print("\n\t\t >>> ODD or EVEN GAME !")
         h_c=input('\n\t\t* Enter your choice [ EVEN or ODD ] : ')
+        if(h_c!='EVEN' and h_c!='ODD'):
+            print("\n\t\t ----->ERROR ! Enter only ODD or EVEN [only CAPS]")
+            print("\n---------------------------------------------------------------------------------------")
+            continue
         l=['EVEN','ODD','BAT','BOWL']
         r_eo=r.randint(0,1)
         print('\n\t\t* COMP choice is :',l[r_eo])
@@ -132,7 +142,12 @@ while(True):
             print("\n---------------------------------------------------------------------------------------")
             continue
         else:
-            h_cn=int(input('\n\t\t* Enter your NUM [ INT only ]: '))
+            try:
+               h_cn=int(input('\n\t\t* Enter your NUM [ INT only ]: '))
+            except:
+                print("\n\t\t -----> ERROR ! ONLY INTEGER ")
+                print("\n---------------------------------------------------------------------------------------")
+                continue
             r_n=r.randint(0,6)
             check=h_cn+r_n
             print('\n\t\t* COMP choice is :',r_n)
@@ -141,13 +156,13 @@ while(True):
             else:
                 print('\n\t\t* TOTAL NUM :',check,'(ODD)')
             scoreh,scorer=0,0
-    
-    
+
+
             if(check%2==0):
                  if(h_c=='EVEN'):
                        scoreh,scorer=h_1st()
-                
-            
+
+
                  elif(l[r_eo]=='EVEN'):
                        scoreh,scorer=r_1st()
 
@@ -159,7 +174,7 @@ while(True):
                  elif(l[r_eo]=='ODD'):
                        scoreh,scorer=r_1st()
 
-                    
+
             print("\n---------------------------------------------------------------------------------------")            
             if(scorer>scoreh):
                  print('\n\t\t >>> COMP WON THE GAME !\n')
@@ -174,5 +189,4 @@ while(True):
         break
     else:
         continue
-    
-    
+        
