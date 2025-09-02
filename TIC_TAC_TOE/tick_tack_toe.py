@@ -129,18 +129,18 @@ while(a==1):
         cl.assign(p1,p1_pos)
         cl.display(k8)
         if(cl.check(k8)!="No"):
-            print(f"\aWinner is {p1.get_name()}")
+            print(f"\a\t\tWinner is {p1.get_name()} ! \n\n")
             break
         if(ps2 < (k8*k8)//2):
             p2_pos=int(input(f"Player 2 (O) Enter Your Position (1-{t}) : "))
             cl.assign(p2,p2_pos)
             cl.display(k8)
             if(cl.check(k8)!="No"):
-                print(f"\aWinner is {p2.get_name()}")
+                print(f"\a\t\tWinner is {p2.get_name()} ! \n\n")
                 break
             ps2+=1
     if cl.check(k8)=="No":
-        print("\aThe Match is a TIE")
+        print("\a\t\tThe Match is a TIE ! \n\n")
     a=int(input("To start game enter 1, To exit 0 : "))
 
 
@@ -148,4 +148,5 @@ while(a==1):
 
 
     
+
 
