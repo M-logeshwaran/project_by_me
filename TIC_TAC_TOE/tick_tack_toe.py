@@ -104,17 +104,18 @@ class tictactoe:
 
 
 
-print("\n\n\t\t\tTICK TACK TOE\n")
-k8=int(input("\nEnter the Grid Size : "))
-cl=tictactoe(k8)
-cl.display(k8)
-t=k8*k8
+
 while(1):
     a=int(input("To start game enter 1, To exit 0 : "))
     if(a!=1 and a!=0):
         print("Enter a valid Input")
     else:break
 while(a==1):
+    print("\n\n\t\t\tTICK TACK TOE\n")
+    k8=int(input("\nEnter the Grid Size : "))
+    cl=tictactoe(k8)
+    cl.display(k8)
+    t=k8*k8
     ps2=0
     p1=player()
     p2=player()
@@ -128,18 +129,18 @@ while(a==1):
         cl.assign(p1,p1_pos)
         cl.display(k8)
         if(cl.check(k8)!="No"):
-            print(f"Winner is {p1.get_name()}")
+            print(f"\aWinner is {p1.get_name()}")
             break
         if(ps2 < (k8*k8)//2):
             p2_pos=int(input(f"Player 2 (O) Enter Your Position (1-{t}) : "))
             cl.assign(p2,p2_pos)
             cl.display(k8)
             if(cl.check(k8)!="No"):
-                print(f"Winner is {p2.get_name()}")
+                print(f"\aWinner is {p2.get_name()}")
                 break
             ps2+=1
     if cl.check(k8)=="No":
-        print("The Match is a TIE")
+        print("\aThe Match is a TIE")
     a=int(input("To start game enter 1, To exit 0 : "))
 
 
@@ -147,3 +148,4 @@ while(a==1):
 
 
     
+
