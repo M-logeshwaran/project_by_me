@@ -48,11 +48,10 @@ class tictactoe:
                 if(s=='X'*self.size):
                     X=1
                     return 'X'
-                    break
                 elif(s=='O'*self.size):
                     O=1
                     return 'O'
-                    break
+
 
 
             s1=''
@@ -63,11 +62,9 @@ class tictactoe:
                 if(s1=='X'*self.size):
                     X=1
                     return 'X'
-                    break
                 elif(s1=='O'*self.size):
                     O=1
-                    return 'O'
-                    break    
+                    return 'O'  
 
 
 
@@ -77,11 +74,10 @@ class tictactoe:
             if(s2=='X'*self.size):
                 X=1
                 return 'X'
-                break
             elif(s2=='O'*self.size):
                 O=1
                 return 'O'
-                break
+            
 
 
             s3=''
@@ -92,17 +88,16 @@ class tictactoe:
                  c=c-1
             if(s3=='X'*self.size):
                 return 'X'
-                break
             elif(s3=='O'*self.size):
                 return 'O'
-                break
 
             if(X==0):
                 return "No"
-                break
             elif(O==0):
                 return "No"
-                break
+            
+            
+
     def reset(self):
         self.l=[]
         self.l1=[] 
