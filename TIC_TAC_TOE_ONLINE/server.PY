@@ -244,6 +244,9 @@ while(a==1 and c==1):
     client_socket[2].send(q.encode())
     if(q=='1' and f=='1'):
         a,c=int(q),int(f)
+    else:
+        print("\t\tThe players has been quiet the game !\n\n")
+        break    
 
 
 server_socket.close()      
