@@ -122,6 +122,7 @@ k=1
 while(k<=2):
     client_socket1, addr = server_socket.accept()
     client_socket[k]=client_socket1
+    print(addr," is connected !")
     k +=1
     
 
@@ -146,13 +147,25 @@ while(a==1):
     board_size=int(board_size)
     cl=tictactoe(board_size)
     ps2=0
-
-
     p1=player()
     p2=player()
+    if(int(client_socket[1].recv(1024).decode())==1):
+        pass
+    if(int(client_socket[2].recv(1024).decode())==2):
+        pass
+    else:
+        temp=client_socket[1]
+        client_socket[1]=client_socket[2]
+        client_socket[2]=temp    
+    
+
+
+
     a1=client_socket[1].recv(1024).decode()
+    print("player 1 name : ",a1)
     client_socket[2].send(a1.encode())
     b=client_socket[2].recv(1024).decode()
+    print("player 2 name : ",b)
     client_socket[1].send(b.encode())
     p1.set_name_and_data(a1,"X")
     p2.set_name_and_data(b,"O")
@@ -165,6 +178,7 @@ while(a==1):
 
 
     for i in range((board_size*board_size//2)+1):
+        print("player 1 ",a1," entering position ...")
         p1_pos=int(client_socket[1].recv(1024).decode())
         cl.assign(p1,int(p1_pos))
         data=json.dumps(cl.l)
@@ -177,6 +191,7 @@ while(a==1):
             print(f"\t\tWinner is {p1.get_name()} !\n\n ")
             break
         if(ps2 < (board_size*board_size)//2):
+            print("player 2 ",b," entering position ...")
             p2_pos=int(client_socket[2].recv(1024).decode())
             cl.assign(p2,p2_pos)
             data=json.dumps(cl.l)
