@@ -40,6 +40,17 @@ class tictactoe:
                 return True
             else:
                 return False
+            
+    def send_board_clients(self):
+        data=json.dumps(self.l)
+        client_socket[1].send(data.encode())
+        client_socket[2].send(data.encode())  
+        
+        
+    def send_check_clients(self):
+        client_socket[1].send(self.check().encode())  
+        client_socket[2].send(self.check().encode())           
+     
                               
     def check(self):
         while True:
@@ -178,10 +189,7 @@ while(a==1 and c==1):
     p1.set_name_and_data(a1,"X")
     p2.set_name_and_data(b,"O")
 
-
-    data=json.dumps(cl.l)
-    client_socket[1].send(data.encode())
-    client_socket[2].send(data.encode())
+    cl.send_board_clients()
     cl.display()
 
 
@@ -197,12 +205,11 @@ while(a==1 and c==1):
                 break
 
 
-        data=json.dumps(cl.l)
-        client_socket[1].send(data.encode()) 
-        client_socket[2].send(data.encode())
+        cl.send_board_clients()
         cl.display()
-        client_socket[1].send(cl.check().encode())
-        client_socket[2].send(cl.check().encode())
+        cl.send_check_clients()
+        
+        
         if(cl.check()!="No"):
             print(f"\t\tWinner is {p1.get_name()} !\n\n ")
             break
@@ -218,20 +225,18 @@ while(a==1 and c==1):
                     break
 
 
-            data=json.dumps(cl.l)
-            client_socket[2].send(data.encode())
-            client_socket[1].send(data.encode())
+            cl.send_board_clients()
             cl.display()
-            client_socket[1].send(cl.check().encode())
-            client_socket[2].send(cl.check().encode())
+            cl.send_check_clients()
+            
+            
             if(cl.check()!="No"):
                 print(f"\t\tWinner is {p2.get_name()} !\n\n")
                 break
             ps2+=1
 
             
-    client_socket[1].send(cl.check().encode())  
-    client_socket[2].send(cl.check().encode())      
+    cl.send_check_clients()     
     if cl.check()=="No":
         print("\t\tThe Match is a TIE ! \n\n")
     q,f=(client_socket[1].recv(1024).decode()),(client_socket[2].recv(1024).decode())
@@ -239,3 +244,6 @@ while(a==1 and c==1):
     client_socket[2].send(q.encode())
     if(q=='1' and f=='1'):
         a,c=int(q),int(f)
+
+
+server_socket.close()      
