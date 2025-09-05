@@ -15,10 +15,10 @@ class player:
         return self.__data
     
 
-
 class board:
     def __init__(self,size):
         self.size=size
+
     def display(self,l):  
         k=0
         print("\n\t\t","----"*self.size)
@@ -29,6 +29,11 @@ class board:
                 k+=1
             print("\n\t\t","----"*self.size)
         print("\n")
+
+    def board_display(self,client_socket_1):
+        raw_l=client_socket_1.recv(1024).decode()
+        l=json.loads(raw_l)
+        self.display(l)    
 
 
 
@@ -54,8 +59,7 @@ while(a==1 and c==1):
     board_size=int(client_socket_1.recv(1024).decode())
     b1=board(board_size)
     ps2=0
-    p1=player()
-    p2=player()
+    p1,p2=player(),player()
     client_socket_1.send(client_id.encode())
 
 
@@ -66,11 +70,7 @@ while(a==1 and c==1):
     print("player 2 name : ",b)
     p1.set_name_and_data(a,"X")
     p2.set_name_and_data(b,"O")
-
-
-    raw_l=client_socket_1.recv(1024).decode()
-    l=json.loads(raw_l)
-    b1.display(l)
+    b1.board_display(client_socket_1)
 
 
     for i in range((board_size*board_size//2)+1):
@@ -82,17 +82,13 @@ while(a==1 and c==1):
                  continue
              else:
                  break                         
-        raw_l=client_socket_1.recv(1024).decode()
-        l=json.loads(raw_l)
-        b1.display(l)
+        b1.board_display(client_socket_1)
         if(client_socket_1.recv(1024).decode()!="No"):
             print(f"\t\tWinner is {p1.get_name()} !\n\n ")
             break
         if(ps2 < (board_size*board_size)//2):
             print("player 2 entering position ...")
-            raw_l=client_socket_1.recv(1024).decode()
-            l=json.loads(raw_l)
-            b1.display(l)
+            b1.board_display(client_socket_1)
             if(client_socket_1.recv(1024).decode()!="No"):
                 print(f"\t\tWinner is {p2.get_name()} !\n\n")
                 break
@@ -104,5 +100,9 @@ while(a==1 and c==1):
     print("MATCH RESTARTING ...")    
     q=input("enter 1 to start , 0 to exit : ")
     client_socket_1.send(q.encode())
+    print("waiting for player 2 to start ...")
     f=(client_socket_1.recv(1024).decode())
     a,c=int(q),int(f)
+
+
+client_socket_1.close()       
