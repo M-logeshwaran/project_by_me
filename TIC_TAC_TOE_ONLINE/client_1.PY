@@ -38,7 +38,8 @@ class board:
 
 
 client_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket_1.connect(("10.53.216.184", 5000))
+ip_address=input("\n\nEnter the IP ADDRESS of SERVER ! :")
+client_socket_1.connect((ip_address, 5000))
 client_id='1'
 
 
@@ -102,6 +103,8 @@ while(a==1 and c==1):
     client_socket_1.send(q.encode())
     print("waiting for player 2 to start ...")
     f=(client_socket_1.recv(1024).decode())
+    if(q!='1' or f!='1'):
+        print("\n\n\t\tGAME CLOSED (Player 2 or YOU quiet the GAME) ! \n\n")
     a,c=int(q),int(f)
 
 
