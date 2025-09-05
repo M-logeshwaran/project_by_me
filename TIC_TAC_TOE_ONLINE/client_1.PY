@@ -2,7 +2,6 @@ import socket
 import json
 
 
-
 class player:
     def __init__(self):
         self.__name=""
@@ -34,7 +33,8 @@ class board:
 
 
 client_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket_1.connect(("10.110.88.184", 5000))
+client_socket_1.connect(("10.65.81.184", 5000))
+client_id='1'
 
 
 while(1):
@@ -52,6 +52,7 @@ while(a==1):
     ps2=0
     p1=player()
     p2=player()
+    client_socket_1.send(client_id.encode())
 
 
     a=input("enter the name :")
