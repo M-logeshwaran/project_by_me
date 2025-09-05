@@ -33,7 +33,8 @@ class board:
 
 
 client_socket_2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket_2.connect(("10.110.88.184", 5000))
+client_socket_2.connect(("10.65.81.184", 5000))
+client_id='2'
 
 
 while(1):
@@ -49,10 +50,12 @@ while(a==1):
     board_size=int(client_socket_2.recv(1024).decode())
     b2=board(board_size)
     ps2=0
-
-
     p1=player()
     p2=player()
+    client_socket_2.send(client_id.encode())
+    
+
+
     print("wait for player 1 input name...")
     a=client_socket_2.recv(1024).decode()
     b=input("enter the name :")
