@@ -36,14 +36,15 @@ class board:
     
 
 client_socket_2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket_2.connect(("10.53.216.184", 5000))
+ip_address=input("\n\nEnter the IP ADDRESS of SERVER ! :")
+client_socket_2.connect((ip_address, 5000))
 client_id='2'
 
 
 while(1):
     a=input("\n\nenter 1 to start , 0 to exit : ")
     client_socket_2.send(a.encode())
-    print("waiting for player 2 to start ...")
+    print("waiting for player 1 to start ...")
     a=int(a)
     c=int(client_socket_2.recv(1024).decode())
     if(a!=1 and a!=0 and c!=0 and c!=1):
@@ -100,6 +101,8 @@ while(a==1 and c==1):
     client_socket_2.send(q.encode())
     print("waiting for player 1 to start ...")
     f=(client_socket_2.recv(1024).decode())
+    if(q!='1' or f!='1'):
+        print("\n\n\t\tGAME CLOSED (Player 1 or YOU quiet the GAME) ! \n\n")
     a,c=int(q),int(f)
 
 
