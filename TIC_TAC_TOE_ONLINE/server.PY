@@ -1,5 +1,6 @@
 import socket
 import json
+import random
 class player:
     def __init__(self):
         self.__name=""
@@ -23,7 +24,7 @@ class tictactoe:
             self.l1=list('-'*self.size)
             self.l.append(self.l1)
     
-    def display(self):  
+    def display(self):         # board display
         k=0
         print("\n\t\t","----"*self.size)
         for i in range(0,self.size):
@@ -34,7 +35,7 @@ class tictactoe:
             print("\n\t\t","----"*self.size)
         print("\n") 
         
-    def assign(self,p,pos):
+    def assign(self,p,pos):        # assign in board or update board
             if ((pos <= (self.size*self.size)) and self.l  [(pos-1)//self.size][(pos-1)%self.size]=='-'):
                 self.l[(pos-1)//self.size][(pos-1)%self.size]=p.get_data() 
                 return True
@@ -49,10 +50,19 @@ class tictactoe:
         
     def send_check_clients(self):
         client_socket[1].send(self.check().encode())  
-        client_socket[2].send(self.check().encode())           
-     
+        client_socket[2].send(self.check().encode())    
+                 
+    def send_assign_recive(self,p,socket_id):    # assign value according to player 1 or 2
+        while(1):
+            pos=(client_socket[socket_id].recv(1024).decode())
+            if(pos.isdigit()==False or self.assign(p,int(pos))==False):
+                client_socket[socket_id].send("True".encode())
+                continue
+            else:
+                client_socket[socket_id].send("False".encode())
+                break
                               
-    def check(self):
+    def check(self):          # checking mechanism
         while True:
             X,O=0,0
             for i in self.l:   #[[],[],[],[],[]]  row wise
@@ -110,23 +120,29 @@ class tictactoe:
             elif(O==0):
                 return "No"
             
-            
+def board_selection():                     # Board selection randomly
+        r_board=str(random.randint(1,2))
+        client_socket[1].send(r_board.encode())
+        client_socket[2].send(r_board.encode())
+        if(r_board=='1'):
+            board_size=client_socket[1].recv(1024).decode()
+            client_socket[2].send(board_size.encode())
+            print("player 1 choose board size : ",board_size)
+        elif(r_board=='2'):
+            board_size=client_socket[2].recv(1024).decode()
+            client_socket[1].send(board_size.encode()) 
+            print("player 2 choose board size : ",board_size) 
+        return board_size            
         
 
 
 
-client_socket={}
-# Create a socket (IPv4, TCP)
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket={}                   # client socket dictinory
 
-# Bind to IP and port
-server_socket.bind(("0.0.0.0", 5000))  # "0.0.0.0" = listen on all interfaces
-
-# Start listening (max 5 connections in queue)
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)   # connect client and store their socket in dictionary
+server_socket.bind(("0.0.0.0", 5000)) 
 server_socket.listen(2)
 print("Server listening on port 5000...")
-
-# Accept connection
 k=1
 while(k<=2):
     client_socket1, addr = server_socket.accept()
@@ -136,8 +152,20 @@ while(k<=2):
     
 
 
+if(int(client_socket[1].recv(1024).decode())==1):                    # rearranging the client socket by their client_id
+        pass
+if(int(client_socket[2].recv(1024).decode())==2):
+        pass
+else:
+    temp=client_socket[1]
+    client_socket[1]=client_socket[2]
+    client_socket[2]=temp
+
 
 while(1):
+
+    # analysing the starting option  mechanism of game by players
+
     print("\n\nWaiting for players to start game ... ")
     a,c=(client_socket[1].recv(1024).decode()),(client_socket[2].recv(1024).decode())
     if(a=="1"):
@@ -159,27 +187,20 @@ while(1):
 
 
 while(a==1 and c==1):
+
+    # Board size selection by players randomly
+
     print("\n\n\t\t\tTIC TAC TOE\n")
-    board_size=(input("Enter the Board Size : "))
-    client_socket[1].send(board_size.encode())
-    client_socket[2].send(board_size.encode())
+    board_size=board_selection()
     board_size=int(board_size)
     cl=tictactoe(board_size)
-    ps2=0
+    ps2=0   
+
+    # assigning player 1 and player 2 name and storing name in player class
+
     p1=player()
     p2=player()
-    if(int(client_socket[1].recv(1024).decode())==1):
-        pass
-    if(int(client_socket[2].recv(1024).decode())==2):
-        pass
-    else:
-        temp=client_socket[1]
-        client_socket[1]=client_socket[2]
-        client_socket[2]=temp    
-    
-
-
-    print("\n\nwaiting for player to enter the name ...")
+    print("\n\nwaiting for players to enter the name ...")
     a1=client_socket[1].recv(1024).decode()
     print("player 1 name : ",a1)
     client_socket[2].send(a1.encode())
@@ -194,59 +215,46 @@ while(a==1 and c==1):
 
 
     for i in range((board_size*board_size//2)+1):
+
+        # assigning position of player 1 and updating boards and send to the both players
+
         print("player 1 ",a1," entering position ...")
-        while(1):
-            p1_pos=int(client_socket[1].recv(1024).decode())
-            if(cl.assign(p1,int(p1_pos))==False):
-                client_socket[1].send("True".encode())
-                continue
-            else:
-                client_socket[1].send("False".encode())
-                break
-
-
+        cl.send_assign_recive(p1,1)
         cl.send_board_clients()
         cl.display()
         cl.send_check_clients()
-        
-        
         if(cl.check()!="No"):
-            print(f"\t\tWinner is {p1.get_name()} !\n\n ")
+            print(f"\t\tWinner is {p1.get_name()} !\n\n ")   # win check player 1
             break
+        
+        # assigning position of player 2 and updating boards and send to the both players
+
         if(ps2 < (board_size*board_size)//2):
             print("player 2 ",b," entering position ...")
-            while(1):
-                p2_pos=int(client_socket[2].recv(1024).decode())
-                if(cl.assign(p2,int(p2_pos))==False):
-                    client_socket[2].send("True".encode())
-                    continue
-                else:
-                    client_socket[2].send("False".encode())
-                    break
-
-
+            cl.send_assign_recive(p2,2)
             cl.send_board_clients()
             cl.display()
-            cl.send_check_clients()
-            
-            
+            cl.send_check_clients() 
             if(cl.check()!="No"):
-                print(f"\t\tWinner is {p2.get_name()} !\n\n")
+                print(f"\t\tWinner is {p2.get_name()} !\n\n")   # win check of player 2
                 break
             ps2+=1
 
             
     cl.send_check_clients()     
-    if cl.check()=="No":
+    if cl.check()=="No":           # draw check 
         print("\t\tThe Match is a TIE ! \n\n")
+
+    # match restart by players choice 
+
     q,f=(client_socket[1].recv(1024).decode()),(client_socket[2].recv(1024).decode())
     client_socket[1].send(f.encode())
     client_socket[2].send(q.encode())
     if(q=='1' and f=='1'):
         a,c=int(q),int(f)
     else:
-        print("\t\tThe players has been quiet the game !\n\n")
-        break    
+        break
 
+print("\n\t\tThe players has been quiet the game !\n\n")
 
 server_socket.close()      
