@@ -1,3 +1,4 @@
+
 import socket
 import json
 
@@ -14,12 +15,22 @@ class player:
     def get_data(self):
         return self.__data
     
+def board_selection():      # board selection
+        r_board=client_socket_1.recv(1024).decode()
+        if(r_board=='1'):
+            board_size=input("Your turn to enter the Board size : ")
+            client_socket_1.send(board_size.encode())
+        elif(r_board=='2'):
+            print("player 2 chance to choose the board size ... ")
+            board_size=client_socket_1.recv(1024).decode()
+            print("player 2 choosen board size : ",board_size)
+        return board_size
 
 class board:
     def __init__(self,size):
         self.size=size
 
-    def display(self,l):  
+    def display(self,l):      # display board
         k=0
         print("\n\t\t","----"*self.size)
         for i in range(0,self.size):
@@ -30,20 +41,24 @@ class board:
             print("\n\t\t","----"*self.size)
         print("\n")
 
-    def board_display(self,client_socket_1):
+    def board_display(self,client_socket_1):     # reciving board converter
         raw_l=client_socket_1.recv(1024).decode()
         l=json.loads(raw_l)
         self.display(l)    
 
 
 
-client_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket_1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)       # player 1 connect to server
 ip_address=input("\n\nEnter the IP ADDRESS of SERVER ! :")
 client_socket_1.connect((ip_address, 5000))
 client_id='1'
+client_socket_1.send(client_id.encode())
 
 
 while(1):
+
+     # game start request send to srever
+
     a=input("\n\nenter 1 to start , 0 to exit : ") 
     client_socket_1.send(a.encode())
     print("waiting for player 2 to start ...")
@@ -56,13 +71,17 @@ while(1):
 
 
 while(a==1 and c==1):
+
+    # board selection
+
     print("\n\n\t\t\tTIC TAC TOE\n")
-    board_size=int(client_socket_1.recv(1024).decode())
+    board_size=int(board_selection())
     b1=board(board_size)
     ps2=0
     p1,p2=player(),player()
-    client_socket_1.send(client_id.encode())
 
+
+    # assigning and reciving name of the players
 
     a=input("enter the name :")
     client_socket_1.send(a.encode())
@@ -71,10 +90,13 @@ while(a==1 and c==1):
     print("player 2 name : ",b)
     p1.set_name_and_data(a,"X")
     p2.set_name_and_data(b,"O")
-    b1.board_display(client_socket_1)
+    b1.board_display(client_socket_1)      # display board
 
 
     for i in range((board_size*board_size//2)+1):
+
+        # player 1 position mechanism
+
         while(1):
              p1_pos=input(f"{p1.get_name()} Enter Your Position : ")
              client_socket_1.send(p1_pos.encode())
@@ -85,27 +107,32 @@ while(a==1 and c==1):
                  break                         
         b1.board_display(client_socket_1)
         if(client_socket_1.recv(1024).decode()!="No"):
-            print(f"\t\tWinner is {p1.get_name()} !\n\n ")
+            print(f"\t\tWinner is {p1.get_name()} !\n\n ")     # win check player 1
             break
+
+        # player 2 position mechanism
+
         if(ps2 < (board_size*board_size)//2):
             print("player 2 entering position ...")
             b1.board_display(client_socket_1)
             if(client_socket_1.recv(1024).decode()!="No"):
-                print(f"\t\tWinner is {p2.get_name()} !\n\n")
+                print(f"\t\tWinner is {p2.get_name()} !\n\n")    # win check player 2
                 break
             ps2+=1
 
 
-    if client_socket_1.recv(1024).decode()=="No":
+    if client_socket_1.recv(1024).decode()=="No":      # draw check
         print("\t\tThe Match is a TIE ! \n\n")
+
+     # match restart by players choice
+
     print("MATCH RESTARTING ...")    
     q=input("enter 1 to start , 0 to exit : ")
     client_socket_1.send(q.encode())
     print("waiting for player 2 to start ...")
     f=(client_socket_1.recv(1024).decode())
-    if(q!='1' or f!='1'):
-        print("\n\n\t\tGAME CLOSED (Player 2 or YOU quiet the GAME) ! \n\n")
     a,c=int(q),int(f)
 
-
+if(a!=1 or c!=1):
+    print("\n\n\t\tGAME CLOSED (Player 2 or YOU quiet the GAME) ! \n\n")
 client_socket_1.close()       
