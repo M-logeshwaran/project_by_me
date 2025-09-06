@@ -161,100 +161,103 @@ else:
     client_socket[1]=client_socket[2]
     client_socket[2]=temp
 
+try :
+    while(1):
 
-while(1):
+        # analysing the starting option  mechanism of game by players
 
-    # analysing the starting option  mechanism of game by players
-
-    print("\n\nWaiting for players to start game ... ")
-    a,c=(client_socket[1].recv(1024).decode()),(client_socket[2].recv(1024).decode())
-    if(a=="1"):
-        print("player 1 Ready to play ! ...")
-    else:
-        print("player 1 quit the game ! ...")
-    if(c=="1"):
-        print("player 2 Ready to play ! ...")
-    else:
-        print("player 2 quit the game ! ...")        
-    client_socket[1].send(c.encode())
-    client_socket[2].send(a.encode())
-    a=int(a)
-    c=int(c)
-    if(a!=1 and a!=0 and c!=1 and c!=0):
-        print("Enter a valid Input")
-    else:
-        break
-
-
-while(a==1 and c==1):
-
-    # Board size selection by players randomly
-
-    print("\n\n\t\t\tTIC TAC TOE\n")
-    board_size=board_selection()
-    board_size=int(board_size)
-    cl=tictactoe(board_size)
-    ps2=0   
-
-    # assigning player 1 and player 2 name and storing name in player class
-
-    p1=player()
-    p2=player()
-    print("\n\nwaiting for players to enter the name ...")
-    a1=client_socket[1].recv(1024).decode()
-    print("player 1 name : ",a1)
-    client_socket[2].send(a1.encode())
-    b=client_socket[2].recv(1024).decode()
-    print("player 2 name : ",b)
-    client_socket[1].send(b.encode())
-    p1.set_name_and_data(a1,"X")
-    p2.set_name_and_data(b,"O")
-
-    cl.send_board_clients()
-    cl.display()
+        print("\n\nWaiting for players to start game ... ")
+        a,c=(client_socket[1].recv(1024).decode()),(client_socket[2].recv(1024).decode())
+        if(a=="1"):
+            print("player 1 Ready to play ! ...")
+        else:
+            print("player 1 quit the game ! ...")
+        if(c=="1"):
+            print("player 2 Ready to play ! ...")
+        else:
+            print("player 2 quit the game ! ...")        
+        client_socket[1].send(c.encode())
+        client_socket[2].send(a.encode())
+        a=int(a)
+        c=int(c)
+        if(a!=1 and a!=0 and c!=1 and c!=0):
+            print("Enter a valid Input")
+        else:
+            break
 
 
-    for i in range((board_size*board_size//2)+1):
+    while(a==1 and c==1):
 
-        # assigning position of player 1 and updating boards and send to the both players
+        # Board size selection by players randomly
 
-        print("player 1 ",a1," entering position ...")
-        cl.send_assign_recive(p1,1)
+        print("\n\n\t\t\tTIC TAC TOE\n")
+        board_size=board_selection()
+        board_size=int(board_size)
+        cl=tictactoe(board_size)
+        ps2=0   
+
+        # assigning player 1 and player 2 name and storing name in player class
+
+        p1=player()
+        p2=player()
+        print("\n\nwaiting for players to enter the name ...")
+        a1=client_socket[1].recv(1024).decode()
+        print("player 1 name : ",a1)
+        client_socket[2].send(a1.encode())
+        b=client_socket[2].recv(1024).decode()
+        print("player 2 name : ",b)
+        client_socket[1].send(b.encode())
+        p1.set_name_and_data(a1,"X")
+        p2.set_name_and_data(b,"O")
+
         cl.send_board_clients()
         cl.display()
-        cl.send_check_clients()
-        if(cl.check()!="No"):
-            print(f"\t\tWinner is {p1.get_name()} !\n\n ")   # win check player 1
-            break
-        
-        # assigning position of player 2 and updating boards and send to the both players
 
-        if(ps2 < (board_size*board_size)//2):
-            print("player 2 ",b," entering position ...")
-            cl.send_assign_recive(p2,2)
+
+        for i in range((board_size*board_size//2)+1):
+
+            # assigning position of player 1 and updating boards and send to the both players
+
+            print("player 1 ",a1," entering position ...")
+            cl.send_assign_recive(p1,1)
             cl.send_board_clients()
             cl.display()
-            cl.send_check_clients() 
+            cl.send_check_clients()
             if(cl.check()!="No"):
-                print(f"\t\tWinner is {p2.get_name()} !\n\n")   # win check of player 2
+                print(f"\t\tWinner is {p1.get_name()} !\n\n ")   # win check player 1
                 break
-            ps2+=1
+        
+            # assigning position of player 2 and updating boards and send to the both players
+
+            if(ps2 < (board_size*board_size)//2):
+                print("player 2 ",b," entering position ...")
+                cl.send_assign_recive(p2,2)
+                cl.send_board_clients()
+                cl.display()
+                cl.send_check_clients() 
+                if(cl.check()!="No"):
+                    print(f"\t\tWinner is {p2.get_name()} !\n\n")   # win check of player 2
+                    break
+                ps2+=1
 
             
-    cl.send_check_clients()     
-    if cl.check()=="No":           # draw check 
-        print("\t\tThe Match is a TIE ! \n\n")
+        cl.send_check_clients()     
+        if cl.check()=="No":           # draw check 
+            print("\t\tThe Match is a TIE ! \n\n")
 
-    # match restart by players choice 
+        # match restart by players choice 
 
-    q,f=(client_socket[1].recv(1024).decode()),(client_socket[2].recv(1024).decode())
-    client_socket[1].send(f.encode())
-    client_socket[2].send(q.encode())
-    if(q=='1' and f=='1'):
-        a,c=int(q),int(f)
-    else:
-        break
+        q,f=(client_socket[1].recv(1024).decode()),(client_socket[2].recv(1024).decode())
+        client_socket[1].send(f.encode())
+        client_socket[2].send(q.encode())
+        if(q=='1' and f=='1'):
+            a,c=int(q),int(f)
+        else:
+            break
 
-print("\n\t\tThe players has been quiet the game !\n\n")
+    print("\n\t\tThe players has been quiet the game !\n\n")
+
+except:
+    print("\n\n\t\t Players connections was lost ! \n\n")    
 
 server_socket.close()      
