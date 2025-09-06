@@ -52,86 +52,89 @@ client_socket_2.connect((ip_address, 5000))
 client_id='2'
 client_socket_2.send(client_id.encode())
 
+try:
+    while(1):
 
-while(1):
+        # game start request send to srever
 
-    # game start request send to srever
-
-    a=input("\n\nenter 1 to start , 0 to exit : ")
-    client_socket_2.send(a.encode())
-    print("waiting for player 1 to start ...")
-    a=int(a)
-    c=int(client_socket_2.recv(1024).decode())
-    if(a!=1 and a!=0 and c!=0 and c!=1):
-        print("Enter a valid Input")
-    else:
-        break
+        a=input("\n\nenter 1 to start , 0 to exit : ")
+        client_socket_2.send(a.encode())
+        print("waiting for player 1 to start ...")
+        a=int(a)
+        c=int(client_socket_2.recv(1024).decode())
+        if(a!=1 and a!=0 and c!=0 and c!=1):
+           print("Enter a valid Input")
+        else:
+           break
 
 
-while(a==1 and c==1):
+    while(a==1 and c==1):
 
-    # board selection
+        # board selection
 
-    print("\n\n\t\t\tTIC TAC TOE\n")
-    board_size=int(board_selection())
-    b2=board(board_size)
-    ps2=0
-    p1,p2=player(),player()  
+        print("\n\n\t\t\tTIC TAC TOE\n")
+        board_size=int(board_selection())
+        b2=board(board_size)
+        ps2=0
+        p1,p2=player(),player()  
 
     
-    # assigning and reciving name of the players
+        # assigning and reciving name of the players
 
-    print("\nwait for player 1 input name...")
-    a1=client_socket_2.recv(1024).decode()
-    print("player 1 name : ",a1)
-    b=input("enter the name :")
-    client_socket_2.send(b.encode())
-    p1.set_name_and_data(a1,"X")
-    p2.set_name_and_data(b,"O")
-    b2.board_display(client_socket_2)      # display board
+        print("\nwait for player 1 input name...")
+        a1=client_socket_2.recv(1024).decode()
+        print("player 1 name : ",a1)
+        b=input("enter the name :")
+        client_socket_2.send(b.encode())
+        p1.set_name_and_data(a1,"X")
+        p2.set_name_and_data(b,"O")
+        b2.board_display(client_socket_2)      # display board
 
 
-    for i in range((board_size*board_size//2)+1):
+        for i in range((board_size*board_size//2)+1):
 
-        # player 1 position mechanism
+            # player 1 position mechanism
 
-        print("player 1 entering position ...")
-        b2.board_display(client_socket_2)
-        if(client_socket_2.recv(1024).decode()!="No"):
-            print(f"\t\tWinner is {p1.get_name()} !\n\n ")       # win check player 1
-            break
-
-        # player 2 position mechanism
-
-        if(ps2 < (board_size*board_size)//2):
-            while(1):
-                p2_pos=input(f"{p2.get_name()} Enter Your Position : ")
-                client_socket_2.send(p2_pos.encode())
-                if(client_socket_2.recv(1024).decode()=="True"):
-                    print("The position is already occupied !  or  INVALID position...\n")
-                    continue
-                else:
-                    break 
+            print("player 1 entering position ...")
             b2.board_display(client_socket_2)
             if(client_socket_2.recv(1024).decode()!="No"):
-                print(f"\t\tWinner is {p2.get_name()} !\n\n")      # win check player 2
+                print(f"\t\tWinner is {p1.get_name()} !\n\n ")       # win check player 1
                 break
-            ps2+=1
+
+            # player 2 position mechanism
+
+            if(ps2 < (board_size*board_size)//2):
+                while(1):
+                    p2_pos=input(f"{p2.get_name()} Enter Your Position (1 - {board_size*board_size}) : ")
+                    client_socket_2.send(p2_pos.encode())
+                    if(client_socket_2.recv(1024).decode()=="True"):
+                        print("The position is already occupied !  or  INVALID position...\n")
+                        continue
+                    else:
+                        break 
+                b2.board_display(client_socket_2)
+                if(client_socket_2.recv(1024).decode()!="No"):
+                    print(f"\t\tWinner is {p2.get_name()} !\n\n")      # win check player 2
+                    break
+                ps2+=1
 
 
-    if client_socket_2.recv(1024).decode()=="No":    # draw check 
-        print("\t\tThe Match is a TIE ! \n\n")
+        if client_socket_2.recv(1024).decode()=="No":    # draw check 
+            print("\t\tThe Match is a TIE ! \n\n")
 
-   # match restart by players choice  
+        # match restart by players choice  
 
-    print("MATCH RESTARTING ...")    
-    q=input("enter 1 to start , 0 to exit : ")
-    client_socket_2.send(q.encode())
-    print("waiting for player 1 to start ...")
-    f=(client_socket_2.recv(1024).decode())
-    a,c=int(q),int(f)
+        print("MATCH RESTARTING ...")    
+        q=input("enter 1 to start , 0 to exit : ")
+        client_socket_2.send(q.encode())
+        print("waiting for player 1 to start ...")
+        f=(client_socket_2.recv(1024).decode())
+        a,c=int(q),int(f)
 
-if(a!=1 or c!=1):
-    print("\n\n\t\tGAME CLOSED (Player 1 or YOU quiet the GAME) ! \n\n")
+    if(a!=1 or c!=1):
+        print("\n\n\t\tGAME CLOSED (Player 1 or YOU quiet the GAME) ! \n\n")
+
+except:
+    print("\n\n\t\tplayer 1 connection was lost ! \n\n")
 
 client_socket_2.close()    
