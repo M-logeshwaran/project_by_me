@@ -31,11 +31,11 @@ class tictactoe:
         
     def assign(self,p,pos):
         while(1):
-            if (self.l  [(pos-1)//self.size][(pos-1)%self.size]=='-'):
+            if ((self.size*self.size)>=pos and self.l[(pos-1)//self.size][(pos-1)%self.size]=='-'):
                 self.l[(pos-1)//self.size][(pos-1)%self.size]=p.get_data() 
                 break
             else:
-                print("Position is Already Occupied. Please Enter Another Position:")
+                print("\n\tPosition is Already Occupied. or invalid position\nPlease Enter Another Position...\n")
                 pos=int(input(f"{p.get_name()} Enter Your Position again :"))
                               
     def check(self):
@@ -131,14 +131,26 @@ while(a==1):
     p2.set_name_and_data(b,"O")
     cl.display()
     for i in range((board_size*board_size//2)+1):
-        p1_pos=int(input(f"{p1.get_name()} Enter Your Position (1-{board_size*board_size}) : "))
+        while(1):
+            try:
+               p1_pos=int(input(f"{p1.get_name()} Enter Your Position (1-{board_size*board_size}) : "))
+               break
+            except:
+                print("\n\tInvalid Value !\n")
+                continue
         cl.assign(p1,p1_pos)
         cl.display()
         if(cl.check()!="No"):
             print(f"\t\tWinner is {p1.get_name()} !\n\n ")
             break
         if(ps2 < (board_size*board_size)//2):
-            p2_pos=int(input(f"{p2.get_name()} Enter Your Position (1-{board_size*board_size}) : "))
+            while(1):
+                try:
+                    p2_pos=int(input(f"{p2.get_name()} Enter Your Position (1-{board_size*board_size}) : "))
+                    break
+                except:
+                    print("\n\tInvalid Value !\n")
+                    continue
             cl.assign(p2,p2_pos)
             cl.display()
             if(cl.check()!="No"):
@@ -148,3 +160,5 @@ while(a==1):
     if cl.check()=="No":
         print("\t\tThe Match is a TIE ! \n\n")
     a=int(input("To start game enter 1, To exit 0 : "))
+
+print("\n\tGame has been Closed !\n")
