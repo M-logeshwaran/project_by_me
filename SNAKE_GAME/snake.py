@@ -15,7 +15,20 @@ class snake:
         self.body=[(0,0)]
 
 
+    def full(self,k8=6):    # box full logic
+        c=0
+        for i in range(k8):
+            for j in range(k8):
+                if(self.l[i][j] == '-'):
+                    c=1    
+                    break
+        if(c==0):
+            return 1
+        else:
+            return 0       
 
+
+    
     def display(self,k8=6):
         k=0
         for i in range(0,k8):
@@ -85,22 +98,33 @@ class snake:
             return 0       
             
           
-a=int(input("enter 1 to start Game ,0 to exit :"))
+a=input("\nenter 1 to start Game ,0 to exit :")
 p1=snake() 
-while(a==1):
+while(a=='1'):
     print("\n\n\t\t SNAKE GAME ! \n\n")
     b_o=0
     c=0
     p1.g_food()
     while(c==0):
         p1.display()
-        b=input("enter (WASD) to MOVE :  ")
+        while(1):
+            b=input("enter (WASD) to MOVE :  ")
+            if(b not in ('w','W','s','S','A','a','d','D')):
+                print("\n\t\tYou entered Invalid input ! Enter again ! \n")
+                continue
+            else:
+                break
         if(p1.move(b)==1):
             b_o=1
             break
         c=p1.food_check()
         p1.display()
-    if(b_o==1):
+    if(b_o==1 or p1.full()==1):
+        if(p1.full()==1):
+            print("\n\t\tYOU WON THE GAME ! ")
         p1=snake()
-        a=int(input("\n\t\tenter 1 to start ,0 to exit :"))
-    p1.display()    
+        a=input("\nenter 1 to start ,0 to exit :")
+    else:    
+       p1.display()  
+print("\n\t\tTHE GAME CLOSED ! ")         
+
