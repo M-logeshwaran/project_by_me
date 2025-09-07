@@ -9,6 +9,8 @@ class player:
         return self.__name
     def get_data(self):
         return self.__data
+    
+
 class tictactoe:
     def __init__ (self,size):
         self.size=size 
@@ -18,6 +20,7 @@ class tictactoe:
             self.l1=list('-'*self.size)
             self.l.append(self.l1)
     
+
     def display(self):
         k=0
         print("\n\t\t","----"*self.size)
@@ -29,6 +32,7 @@ class tictactoe:
             print("\n\t\t","----"*self.size)
         print("\n") 
         
+
     def assign(self,p,pos):
         while(1):
             if ((self.size*self.size)>=pos and self.l[(pos-1)//self.size][(pos-1)%self.size]=='-'):
@@ -37,7 +41,23 @@ class tictactoe:
             else:
                 print("\n\tPosition is Already Occupied. or invalid position\nPlease Enter Another Position...\n")
                 pos=int(input(f"{p.get_name()} Enter Your Position again :"))
-                              
+
+
+    def recive_assign_process(self,p):
+        while(1):
+                try:
+                    p_pos=int(input(f"{p.get_name()} Enter Your Position (1-{self.size*self.size}) : "))
+                    break
+                except:
+                    print("\n\tInvalid Value !\n")
+                    continue
+        self.assign(p,p_pos)
+        self.display()
+        if(cl.check()!="No"):
+            print(f"\t\tWinner is {p.get_name()} !\n\n")
+            return 1
+        
+
     def check(self):
         while True:
             X,O=0,0
@@ -131,31 +151,11 @@ while(a==1):
     p2.set_name_and_data(b,"O")
     cl.display()
     for i in range((board_size*board_size//2)+1):
-        while(1):
-            try:
-               p1_pos=int(input(f"{p1.get_name()} Enter Your Position (1-{board_size*board_size}) : "))
-               break
-            except:
-                print("\n\tInvalid Value !\n")
-                continue
-        cl.assign(p1,p1_pos)
-        cl.display()
-        if(cl.check()!="No"):
-            print(f"\t\tWinner is {p1.get_name()} !\n\n ")
+        if(cl.recive_assign_process(p1)==1):
             break
         if(ps2 < (board_size*board_size)//2):
-            while(1):
-                try:
-                    p2_pos=int(input(f"{p2.get_name()} Enter Your Position (1-{board_size*board_size}) : "))
+            if(cl.recive_assign_process(p2)==1):
                     break
-                except:
-                    print("\n\tInvalid Value !\n")
-                    continue
-            cl.assign(p2,p2_pos)
-            cl.display()
-            if(cl.check()!="No"):
-                print(f"\t\tWinner is {p2.get_name()} !\n\n")
-                break
             ps2+=1
     if cl.check()=="No":
         print("\t\tThe Match is a TIE ! \n\n")
