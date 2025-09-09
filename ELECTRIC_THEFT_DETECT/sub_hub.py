@@ -19,36 +19,35 @@ while True:
         print("\n", "-" * 100, "\n")
         print("\n\t\tSUB_HUB_1 REPORT : ")
 
-        get_volt = sub_hub.recv(1024).decode()
+        get_volt = sub_hub.recv(1024).decode().strip()
         if not get_volt:
-            print("\n[SubHub] Server closed connection\n")
+            print("[SubHub] MainHub closed connection")
             break
-
         get_volt = int(get_volt)
         print("\n\tINCOMING voltage : ", get_volt)
 
         rt = random.randint(1, 5)
         re = random.randint(1, 5)
-        if rt == 1 and re==1 :
+        if rt == 1 and re == 1:
             theft = 0
             get_volt = 0
-        elif rt==1 :
-            theft = random.randint(15,30)
+        elif rt == 1:
+            theft = random.randint(15, 30)
         else:
             theft = random.randint(0, 3)
 
         input_volt = get_volt - theft
-        sub_hub.send(str(input_volt).encode())
+        sub_hub.send((str(input_volt) + "\n").encode())
         print("\n\tRECIVED voltage : ", input_volt)
 
-
-        if(input_volt == 0 ):
+        if input_volt == 0:
             print("\n\t WIRE CUT WAS DETECTED ! ")
-            
+            sub_hub.send((sub_id + "\n").encode())
+
         elif input_volt < 235:
             print("\n\tTHEFT DETECTED ! ")
             theft_data = f"{get_volt},{input_volt},{theft},{sub_id}"
-            sub_hub.send(theft_data.encode())
+            sub_hub.send((theft_data + "\n").encode())
 
     except Exception as e:
         print("\n[SubHub] Error in loop:\n", e)
