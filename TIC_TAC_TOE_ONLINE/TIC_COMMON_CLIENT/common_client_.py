@@ -1,7 +1,7 @@
- 
+
 import socket
 import json
- 
+  
 
 class player:
     def __init__(self): 
@@ -55,7 +55,15 @@ class board:
         l=json.loads(raw_l)
         self.display(l)    
 
-
+def your_turn_logic(board_size,p):
+        while(1):
+            p_pos=input(f"{p.get_name()} Enter Your Position (1 - {board_size*board_size}) : ")
+            client_socket.send(p_pos.encode())
+            if(client_socket.recv(1024).decode()=="True"):
+                print("The position is already occupied !  or  INVALID position ...\n")
+                continue
+            else:
+                break
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)       # player 1 connect to server
 ip_address=input("\n\nEnter the IP ADDRESS of SERVER ! :")
@@ -116,20 +124,12 @@ try :
 
             # player 1 position mechanism
             if(player_id=='1'):
-                while(1):
-                    p1_pos=input(f"{p1.get_name()} Enter Your Position (1 - {board_size*board_size}) : ")
-                    client_socket.send(p1_pos.encode())
-                    if(client_socket.recv(1024).decode()=="True"):
-                        print("The position is already occupied !  or  INVALID position ...\n")
-                        continue
-                    else:
-                        break                         
+                your_turn_logic(board_size,p1)                       
                 b1.board_display(client_socket)
                 if(client_socket.recv(1024).decode()!="No"):
                     print(f"\t\tWinner is {p1.get_name()} !\n\n ")     # win check player 1
                     break
 
-                # player 2 position mechanism
 
                 if(ps2 < (board_size*board_size)//2):
                     print("player 2 entering position ...")
@@ -139,27 +139,17 @@ try :
                         break
                     ps2+=1
                     
-            elif(player_id=='2'):    
-
-                # player 1 position mechanism
-
+            # player 2 position mechanism
+            elif(player_id=='2'):   
                 print("player 1 entering position ...")
                 b1.board_display(client_socket)
                 if(client_socket.recv(1024).decode()!="No"):
                     print(f"\t\tWinner is {p1.get_name()} !\n\n ")       # win check player 1
                     break
 
-                # player 2 position mechanism
 
                 if(ps2 < (board_size*board_size)//2):
-                    while(1):
-                        p2_pos=input(f"{p2.get_name()} Enter Your Position (1 - {board_size*board_size}) : ")
-                        client_socket.send(p2_pos.encode())
-                        if(client_socket.recv(1024).decode()=="True"):
-                            print("The position is already occupied !  or  INVALID position...\n")
-                            continue
-                        else:
-                            break 
+                    your_turn_logic(board_size,p2)  
                     b1.board_display(client_socket)
                     if(client_socket.recv(1024).decode()!="No"):
                         print(f"\t\tWinner is {p2.get_name()} !\n\n")      # win check player 2
