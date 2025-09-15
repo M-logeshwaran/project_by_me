@@ -1,9 +1,9 @@
 import random
 import socket
 import time
-
+ 
 sub_hub = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+ 
 try:
     ip_address = input("\n\nEnter the IP ADDRESS of SERVER ! :")
     sub_hub.connect((ip_address, 6000))
