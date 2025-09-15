@@ -1,7 +1,7 @@
 import random
 import socket
 import time
-
+  
 class main_hub:
     def __init__(self):
         pass
@@ -35,35 +35,40 @@ except Exception as e:
 
 k = 1
 while True:
-    time.sleep(2)
-    print("\n", "-" * 100, "\n")
-    print("\n\t", k, " FLOW :")
+    try:
+        time.sleep(2)
+        print("\n", "-" * 100, "\n")
+        print("\n\t", k, " FLOW :")
 
-    input_volt = str(random.randint(240, 245))
-    print("\n\t\tinput voltage : ", input_volt)
+        input_volt = str(random.randint(240, 245))
+        print("\n\t\tinput voltage : ", input_volt)
 
-    sub_hub[1].send(input_volt.encode())
-    sub_recive_volt = int(sub_hub[1].recv(1024).decode())
-    print("\n\t\tSUB 1 recive voltage : ", sub_recive_volt)
+        sub_hub[1].send(input_volt.encode())
+        sub_recive_volt = int(sub_hub[1].recv(1024).decode())
+        print("\n\t\tSUB 1 recive voltage : ", sub_recive_volt)
 
-    if(sub_recive_volt == 0):
-        print("\n\n\tWIRE WAS CUTTED ! \n")
-        addr_sub = sub_hub[1].recv(1024).decode()
-        print("From sub_hub Between :", addr_sub)
-        print("\n\n\tCUTTENT FLOW WAS STOPPED ! in BEFORE SUB_HUB OF subhub ", addr_sub)
+        if(sub_recive_volt == 0):
+            print("\n\n\tWIRE WAS CUTTED ! \n")
+            addr_sub = sub_hub[1].recv(1024).decode()
+            print("From sub_hub Between :", addr_sub)
+            print("\n\n\tCUTTENT FLOW WAS STOPPED ! in BEFORE SUB_HUB OF subhub ", addr_sub)
 
-        # send voltage=0 and subid together
-        sub_hub[2].send(f"0,{addr_sub}\n".encode())
+            # send voltage=0 and subid together
+            sub_hub[2].send(f"0,{addr_sub}\n".encode())
 
-    elif sub_recive_volt < 235:
-        print("\n\n\tTHEFT DETECTED ! \n")
-        theft_data = sub_hub[1].recv(3000).decode()
+        elif sub_recive_volt < 235:
+            print("\n\n\tTHEFT DETECTED ! \n")
+            theft_data = sub_hub[1].recv(3000).decode()
 
-        if theft_data:
-            input_server_volt, recivied_sub_voolt, diff_volt, addr_sub = theft_data.split(",")
-            print("From SubHub:", addr_sub)
+            if theft_data:
+                input_server_volt, recivied_sub_voolt, diff_volt, addr_sub = theft_data.split(",")
+                print("From SubHub:", addr_sub)
 
-            # send theft data with prefix
-            sub_hub[2].send(f"T,{theft_data}\n".encode())
+                # send theft data with prefix
+                sub_hub[2].send(f"T,{theft_data}\n".encode())
 
-    k += 1
+        k += 1
+
+    except Exception as e:
+        print("\n[MainHub] Error in loop:\n", e)
+        break    
